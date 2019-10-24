@@ -124,7 +124,20 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter.html
-    reporters: ['spec'],
+    
+    //reporters: ['spec'],
+
+    reporters: [
+        'dot',
+        ['junit', {
+            outputDir: './reports',
+             outputFileFormat: function(options) { // optional
+                 return `results-${options.cid}.${options.capabilities}.xml`
+             }
+        }]
+    ],
+    
+
  //
     // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {
