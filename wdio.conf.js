@@ -127,17 +127,11 @@ exports.config = {
     
     //reporters: ['spec'],
 
-    reporters: [
-
-        'cucumberjs-json',
-
-        // OR like this if you want to set the folder and the language
-        [ 'cucumberjs-json', {
-                jsonFolder: './reports',
-                language: 'en',
-            },
-        ],
-    ],
+    reporters: [['allure', {
+        outputDir: 'reports',
+        disableWebdriverStepsReporting: true,
+        disableWebdriverScreenshotsReporting: true,
+    }]],
     
 
  //
