@@ -128,13 +128,15 @@ exports.config = {
     //reporters: ['spec'],
 
     reporters: [
-        'dot',
-        ['junit', {
-            outputDir: './reports',
-             outputFileFormat: function(options) { // optional
-                 return `results-${options.cid}.${options.capabilities}.xml`
-             }
-        }]
+
+        'cucumberjs-json',
+
+        // OR like this if you want to set the folder and the language
+        [ 'cucumberjs-json', {
+                jsonFolder: './reports',
+                language: 'en',
+            },
+        ],
     ],
     
 

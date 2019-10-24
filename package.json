@@ -27,6 +27,7 @@
     "cucumber": "^6.0.2",
     "wdio-chromedriver-service": "^5.0.2",
     "wdio-cucumber-reporter": "0.0.2",
+    "wdio-cucumberjs-json-reporter": "^1.1.1",
     "webdriverio": "^5.15.1"
   },
   "babel": {
