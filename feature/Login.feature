@@ -5,4 +5,4 @@ Feature: TO PERFORM LOGIN IN DEMO APPLICATION
       When I loggin with registered user
       Then I shall be on the Flight Finder page
       
-      THIS IS A TEST PUSH
+      THIS IS A TEST
