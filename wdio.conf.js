@@ -8,9 +8,6 @@ exports.config = {
     // on a remote machine).
     runner: 'local',
     //
-    // Override default path ('/wd/hub') for chromedriver service.
-    path: '/wd/hub',
-    //
     // ==================
     // Specify Test Files
     // ==================
@@ -20,7 +17,7 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        './feature/*.feature'
+        './feature/**/*.feature'
     ],
     // Patterns to exclude.
     exclude: [
@@ -42,20 +39,21 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 1,
+    maxInstances: 10,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
     capabilities: [{
+    
         // maxInstances can get overwritten per capability. So if you have an in-house Selenium
         // grid with only 5 firefox instances available you can make sure that not more than
         // 5 instances get started at a time.
-        maxInstances: 1,
+        maxInstances: 5,
         //
         browserName: 'chrome',
-        //platformName: 'Windows 7',
+        acceptInsecureCerts: true
         // If outputDir is provided WebdriverIO can capture driver session logs
         // it is possible to configure which logTypes to include/exclude.
         // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
@@ -98,8 +96,8 @@ exports.config = {
     waitforTimeout: 10000,
     //
     // Default timeout in milliseconds for request
-    // if Selenium Grid doesn't send response
-    connectionRetryTimeout: 90000,
+    // if browser driver or grid doesn't send response
+    connectionRetryTimeout: 120000,
     //
     // Default request retries count
     connectionRetryCount: 3,
@@ -108,7 +106,7 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['@wdio/selenium-standalone-service','chromedriver'],
+    services: ['chromedriver'],
     
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -121,38 +119,45 @@ exports.config = {
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
     //
+    // Whether or not retried specfiles should be retried immediately or deferred to the end of the queue
+    // specFileRetriesDeferred: false,
+    //
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter.html
-    
-    //reporters: ['spec'],
+    reporters: [
+        'spec'
+        
+        //  ['cucumberjs-json', {
+        //      jsonFolder: './reports/',
+        //      language: 'en',
+        //  }]
 
-    reporters: [['allure', {
-        outputDir: 'reports',
-        disableWebdriverStepsReporting: true,
-        disableWebdriverScreenshotsReporting: true,
-    }]],
-    
+    ],
 
- //
-    // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {
-        require: ['./stepdefinition/*.js'],        // <string[]> (file/dir) require files before executing features
+        require: ['./step_definitions/*.js'],      // <string[]> (file/dir) require files before executing features
         backtrace: false,   // <boolean> show full backtrace for errors
         requireModule: [],  // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
         dryRun: false,      // <boolean> invoke formatters without executing steps
         failFast: false,    // <boolean> abort the run on first failure
         format: ['pretty'], // <string[]> (type[:path]) specify the output format, optionally supply PATH to redirect formatter output (repeatable)
-        colors: true,       // <boolean> disable colors in formatter output
         snippets: true,     // <boolean> hide step definition snippets for pending steps
         source: true,       // <boolean> hide source uris
         profile: [],        // <string[]> (name) specify the profile to use
         strict: false,      // <boolean> fail if there are any undefined or pending steps
         tagExpression: '',  // <string> (expression) only execute the features or scenarios with tags matching the expression
         timeout: 60000,     // <number> timeout for step definitions
-        ignoreUndefinedDefinitions: true, // <boolean> Enable this config to treat undefined definitions as warnings.
+        ignoreUndefinedDefinitions: false, // <boolean> Enable this config to treat undefined definitions as warnings.
     },
     
+    //
+    // Options to be passed to Mocha.
+    // See the full list at http://mochajs.org/
+    mochaOpts: {
+        ui: 'bdd',
+        timeout: 60000
+    },
     //
     // =====
     // Hooks
@@ -167,6 +172,17 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     // onPrepare: function (config, capabilities) {
+    // },
+    /**
+     * Gets executed before a worker process is spawned and can be used to initialise specific service
+     * for that worker as well as modify runtime environments in an async fashion.
+     * @param  {String} cid      capability id (e.g 0-0)
+     * @param  {[type]} caps     object containing capabilities for session that will be spawn in the worker
+     * @param  {[type]} specs    specs to be run in the worker process
+     * @param  {[type]} args     object that will be merged with the main configuration once worker is initialised
+     * @param  {[type]} execArgv list of string arguments passed to the worker process
+     */
+    // onWorkerStart: function (cid, caps, specs, args, execArgv) {
     // },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
@@ -193,36 +209,41 @@ exports.config = {
     // beforeCommand: function (commandName, args) {
     // },
     /**
-     * Runs before a Cucumber feature
+     * Hook that gets executed before the suite starts
+     * @param {Object} suite suite details
      */
-    // beforeFeature: function (uri, feature, scenarios) {
+    // beforeSuite: function (suite) {
     // },
     /**
-     * Runs before a Cucumber scenario
+     * Function to be executed before a test (in Mocha/Jasmine) starts.
      */
-    // beforeScenario: function (uri, feature, scenario, sourceLocation) {
+    // beforeTest: function (test, context) {
     // },
     /**
-     * Runs before a Cucumber step
+     * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
+     * beforeEach in Mocha)
      */
-    // beforeStep: function (uri, feature, stepData, context) {
+    // beforeHook: function (test, context) {
     // },
     /**
-     * Runs after a Cucumber step
+     * Hook that gets executed _after_ a hook within the suite starts (e.g. runs after calling
+     * afterEach in Mocha)
      */
-    // afterStep: function (uri, feature, { error, result, duration, passed }, stepData, context) {
+    // afterHook: function (test, context, { error, result, duration, passed, retries }) {
     // },
     /**
-     * Runs after a Cucumber scenario
+     * Function to be executed after a test (in Mocha/Jasmine).
      */
-    // afterScenario: function (uri, feature, scenario, result, sourceLocation) {
+    // afterTest: function(test, context, { error, result, duration, passed, retries }) {
     // },
+
+
     /**
-     * Runs after a Cucumber feature
+     * Hook that gets executed after the suite has ended
+     * @param {Object} suite suite details
      */
-    // afterFeature: function (uri, feature, scenarios) {
+    // afterSuite: function (suite) {
     // },
-    
     /**
      * Runs after a WebdriverIO command gets executed
      * @param {String} commandName hook command name
