@@ -1,4 +1,4 @@
-Feature: TO PERFORM LOGIN IN DEMO APPLICATION
+Feature: TO PERFORM SERACH IN GOOGLE
 
    Scenario: Login with demo user
       Given I launch the application
