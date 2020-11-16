@@ -1,18 +1,22 @@
-const { expect } = require("chai");
-const { Given } = require("cucumber");
-const { When } = require("cucumber");
-const { Then } = require("cucumber");
+const { Given, When, Then } = require('cucumber');
 
-Given(/^I launch the application$/, function () {
-  browser.url("https://accounts.google.com");
+const LoginPage = require('../pageobjects/login.page');
+const SecurePage = require('../pageobjects/secure.page');
+
+const pages = {
+    login: LoginPage
+}
+
+Given(/^I am on the (\w+) page$/, (page) => {
+    pages[page].open()
 });
 
-When(/^I search for content$/, function () {
-  browser.$("[name='identifier']").setValue("ABCD123@GMAIL.COM");
-  //browser.$("[name='password']").setValue("MYPASSWORD");  
-  //browser.$("[name='btnK']").click();
+When(/^I login with (\w+) and (.+)$/, (username, password) => {
+    LoginPage.login(username, password)
 });
 
-Then(/^I verify browser title$/, function () {
-  expect(browser.getTitle()).to.equal("TEST SEARCH - Google Search");
+Then(/^I should see a flash message saying (.*)$/, (message) => {
+    expect(SecurePage.flashAlert).toBeExisting();
+    expect(SecurePage.flashAlert).toHaveTextContaining(message);
 });
+
