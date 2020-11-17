@@ -79,9 +79,9 @@ exports.config = {
         // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
         // excludeDriverLogs: ['bugreport', 'server'],
 
-        'sauce:options': {
-            tunnelIdentifier: 'testTunnel',
-        },
+        // 'sauce:options': {
+        //     tunnelIdentifier: 'testTunnel',
+        // },
     }],
     //
     // ===================
@@ -152,7 +152,16 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter.html
-    reporters: ['spec'],
+    reporters: [
+        // OR like this if you want to set the folder and the language
+        [
+          "cucumberjs-json",
+          {
+            jsonFolder: "reports/",
+            language: "en",
+          },
+        ],
+      ],
 
 
     //
