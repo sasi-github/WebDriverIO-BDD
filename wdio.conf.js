@@ -143,16 +143,25 @@ exports.config = {
   // reporters: ["spec"],
 
   reporters: [
-    // Like this with the default options, see the options below
-    'cucumberjs-json',
+    ['json', {
+      outputDir: './reports/'
+      }],
 
-    // OR like this if you want to set the folder and the language
-    [ 'cucumberjs-json', {
-            jsonFolder: '.tmp/new/',
-            language: 'en',
-        },
-    ],
-],
+  ],
+
+  // reporters: [
+  //   // Like this with the default options, see the options below
+  //   "cucumberjs-json",
+
+  //   // OR like this if you want to set the folder and the language
+  //   [
+  //     "cucumberjs-json",
+  //     {
+  //       jsonFolder: ".tmp/new/",
+  //       language: "en",
+  //     },
+  //   ],
+  // ],
   //
   // If you are using Cucumber you need to specify the location of your step definitions.
   cucumberOpts: {
